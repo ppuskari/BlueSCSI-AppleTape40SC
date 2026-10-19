@@ -1,0 +1,11 @@
+name: AppleTape40SC R0 host tests
+on: [push, pull_request]
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile C++17 host tests
+        run: bash tests/run_host_tests.sh
+      - name: Check overlay Python syntax
+        run: python3 -m py_compile tools/apply_overlay.py utils/apple40sc_create_image.py
