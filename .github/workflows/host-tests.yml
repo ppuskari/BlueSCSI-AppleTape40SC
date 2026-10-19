@@ -9,3 +9,11 @@ jobs:
         run: bash tests/run_host_tests.sh
       - name: Check overlay Python syntax
         run: python3 -m py_compile tools/apply_overlay.py utils/apple40sc_create_image.py
+      - name: Check integration against pinned BlueSCSI firmware source
+        run: |
+          git clone --filter=blob:none https://github.com/BlueSCSI/BlueSCSI-v2.git /tmp/bluescsi-v2
+          git -C /tmp/bluescsi-v2 checkout 5e64e3b4a09088c67a2a6728385600ea67ddbe0d
+          python3 tools/apply_overlay.py --check /tmp/bluescsi-v2
+          python3 tools/apply_overlay.py /tmp/bluescsi-v2
+          git -C /tmp/bluescsi-v2 diff --check
+          test -f /tmp/bluescsi-v2/src/AppleTape40SC.cpp
